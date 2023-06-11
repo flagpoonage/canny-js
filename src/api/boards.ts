@@ -13,11 +13,21 @@ export function retrieveBoard(id: string) {
 }
 
 /**
+ * Response for the {@link listAllBoards} API.
+ */
+export interface ListAllBoardsResponse {
+  /**
+   * A list of board objects
+   */
+  boards: Board[];
+}
+
+/**
  * Returns a list of all boards associated with your company, in no particular order.
  *
  * Reference: https://developers.canny.io/api-reference#list_all_boards
  * @returns A dictionary with a "boards" property that contains an array of board objects.
  */
 export function listAllBoards() {
-  return cannyRequest<Board[]>("/boards/list");
+  return cannyRequest<ListAllBoardsResponse>("/boards/list");
 }
