@@ -1,6 +1,6 @@
 {
   "name": "canny-js-api",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "API wrapper library for Canny",
   "typings": "./lib/esm/index.d.ts",
   "exports": {
@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build:esm": "tsc --project tsconfig.esm.json",
-    "build:cjs": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
     "build": "npm run build:esm && npm run build:cjs",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
