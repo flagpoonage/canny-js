@@ -4,7 +4,7 @@ import type { Category } from "../types/category.js";
 /**
  * Retrieves the details of an existing category, specified by its id.
  *
- * Reference https://developers.canny.io/api-reference#retrieve_category
+ * Reference: https://developers.canny.io/api-reference#retrieve_category
  * @param id The category's unique identifier.
  * @returns a category object, if a valid id was supplied.
  */
@@ -102,7 +102,7 @@ export function createCategory(options: CreateCategoryOptions) {
  *
  * Reference: https://developers.canny.io/api-reference#delete_category
  * @param id
- * @returns
+ * @returns "success" if the category was successfully deleted.
  */
 export function deleteCategory(id: string) {
   return cannyRequest<void>("/categories/delete", { id });
