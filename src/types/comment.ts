@@ -1,7 +1,7 @@
-import type { Board } from "./board";
-import type { Post } from "./post";
-import type { Reactions } from "./reaction";
-import type { User } from "./user";
+import type { Board } from "./board.js";
+import type { Post } from "./post.js";
+import type { Reactions } from "./reaction.js";
+import type { User } from "./user.js";
 
 /**
  * Users and admins can leave comments on posts. Therefore, comment objects are always associated with a post.

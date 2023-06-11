@@ -1,6 +1,6 @@
 {
   "name": "canny-js-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "API wrapper library for Canny",
   "type": "module",
   "typings": "./lib/esm/index.d.ts",
@@ -18,7 +18,8 @@
     "build:cjs": "tsc --project tsconfig.cjs.json",
     "rename:cjs": "node rewrite-files.js",
     "build": "npm run build:esm && npm run build:cjs",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "James Hay (https://github.com/flagpoonage)",
@@ -30,5 +31,8 @@
     "eslint": "^8.42.0",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "got": "^13.0.0"
   }
 }

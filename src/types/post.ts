@@ -1,6 +1,6 @@
-import type { Board } from "./board";
-import type { Category } from "./category";
-import type { User } from "./user";
+import type { Board } from "./board.js";
+import type { Category } from "./category.js";
+import type { User } from "./user.js";
 
 /**
  * A clickup task that is linked with a post

@@ -1,5 +1,5 @@
-import type { Post } from "./post";
-import type { Reactions } from "./reaction";
+import type { Post } from "./post.js";
+import type { Reactions } from "./reaction.js";
 
 /**
  * A changelog is simply a list of entries.

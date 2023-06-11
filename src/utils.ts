@@ -1,4 +1,5 @@
 import { getCannyApiKey, getCannyApiOrigin } from "./env.js";
+import got, { HTTPError, type Response } from "got";
 
 type AsyncSuccess<T> = {
   success: true;
@@ -27,7 +28,7 @@ export class FailedFetchError extends Error {
 export class BadResponseError extends Error {
   private _response: Response;
   constructor(response: Response) {
-    super(`[${response.status}] - ${response.statusText}`);
+    super(`[${response.statusCode}] - ${response.statusMessage}`);
     this._response = response;
   }
 
@@ -36,11 +37,9 @@ export class BadResponseError extends Error {
   }
 }
 
-export async function safeJsonResponseBody(
-  response: Response
-): Promise<AsyncResult<unknown>> {
+export function safeJsonResponseBody(response: string): AsyncResult<unknown> {
   try {
-    const body = await response.json();
+    const body = JSON.parse(response);
     return {
       success: true,
       value: body,
@@ -58,11 +57,8 @@ export async function post<T>(
   requestData: unknown
 ): Promise<AsyncResult<T>> {
   try {
-    const response = await fetch(url, {
-      body: JSON.stringify(requestData),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const response = await got.post(url, {
+      json: requestData,
     });
 
     if (!response.ok) {
@@ -72,7 +68,7 @@ export async function post<T>(
       };
     }
 
-    const body = await safeJsonResponseBody(response);
+    const body = safeJsonResponseBody(response.body);
 
     if (!body.success) {
       return {
@@ -86,6 +82,13 @@ export async function post<T>(
       value: body.value as T,
     };
   } catch (ex) {
+    if (ex instanceof HTTPError) {
+      return {
+        success: false,
+        error: ex,
+      };
+    }
+
     return {
       success: false,
       error: new FailedFetchError(ex),
