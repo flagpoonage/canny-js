@@ -1,4 +1,4 @@
-import { canny } from "./lib/esm/index.js";
+import * as canny from "./lib/esm/index.js";
 
 async function go() {
   const results = await canny.listAllBoards();

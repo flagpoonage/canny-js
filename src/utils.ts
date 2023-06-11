@@ -1,5 +1,5 @@
 import { getCannyApiKey, getCannyApiOrigin } from "./env.js";
-import got, { HTTPError, type Response } from "got";
+import { got, HTTPError, Response } from "got-cjs";
 
 type AsyncSuccess<T> = {
   success: true;
