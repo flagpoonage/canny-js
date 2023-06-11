@@ -5,8 +5,7 @@
   "type": "module",
   "typings": "./lib/esm/index.d.ts",
   "exports": {
-    "import": "./lib/esm/index.js",
-    "require": "./lib/cjs/index.js"
+    "import": "./lib/esm/index.js"
   },
   "files": [
     "lib",
@@ -15,9 +14,7 @@
   ],
   "scripts": {
     "build:esm": "tsc --project tsconfig.esm.json",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "rename:cjs": "node rewrite-files.js",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "npm run build:esm",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
