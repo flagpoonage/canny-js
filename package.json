@@ -1,6 +1,6 @@
 {
   "name": "canny-js-api",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "API wrapper library for Canny",
   "typings": "./lib/esm/index.d.ts",
   "exports": {

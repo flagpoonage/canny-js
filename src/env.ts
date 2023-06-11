@@ -1,10 +1,14 @@
 const CannyEnv = {
-  apiOrigin: process.env.CANNY_API_ORIGIN ?? "https://canny.io/api/v1",
-  apiKey: process.env.CANNY_API_KEY ?? "",
+  apiOrigin: null as string | null,
+  apiKey: null as string | null,
 };
 
 export function getCannyApiOrigin() {
-  return CannyEnv.apiOrigin;
+  return (
+    CannyEnv.apiOrigin ??
+    process.env.CANNY_API_ORIGIN ??
+    "https://canny.io/api/v1"
+  );
 }
 
 export function setCannyApiOrigin(origin: string) {
@@ -13,7 +17,7 @@ export function setCannyApiOrigin(origin: string) {
 }
 
 export function getCannyApiKey() {
-  return CannyEnv.apiKey;
+  return CannyEnv.apiKey ?? process.env.CANNY_API_KEY ?? "";
 }
 
 export function setCannyApiKey(apiKey: string) {
