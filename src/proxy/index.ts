@@ -3,6 +3,7 @@ import { got } from "got-cjs";
 import { pipeline } from "node:stream/promises";
 import { getCannyApiOrigin } from "../env";
 import path from "path";
+import { PassThrough, Writable } from "stream";
 
 export interface ProxyResponse {
   status: number;
@@ -37,12 +38,14 @@ export function createCannyProxyRequestHandler(options: CannyProxyOptions) {
 
     try {
       const origin = options.cannyApiOrigin ?? getCannyApiOrigin();
+
       await pipeline(
-        request,
         got.stream.post(path.join(origin, api_specifier), {
           headers: {
             "Content-Type": "application/json",
+            "Content-Length": request.headers["content-length"],
           },
+          body: request,
         }),
         response
       );
