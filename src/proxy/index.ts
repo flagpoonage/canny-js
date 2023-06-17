@@ -15,6 +15,14 @@ export function createCannyProxyRequestHandler(options: CannyProxyOptions) {
     request: http.IncomingMessage,
     response: http.ServerResponse
   ) {
+    if (request.method === "OPTIONS") {
+      response.setHeader("Access-Control-Allow-Methods", "OPTIONS, POST, GET");
+      response.setHeader("Access-Control-Allow-Origin", "*");
+      response.setHeader("Access-Control-Allow-Headers", "*");
+      response.statusCode = 200;
+      return response.end();
+    }
+
     if (
       !request.url ||
       (options.apiPath && !request.url.startsWith(options.apiPath))
@@ -32,7 +40,9 @@ export function createCannyProxyRequestHandler(options: CannyProxyOptions) {
       await pipeline(
         request,
         got.stream.post(path.join(origin, api_specifier), {
-          headers: request.headers,
+          headers: {
+            "Content-Type": "application/json",
+          },
         }),
         response
       );
