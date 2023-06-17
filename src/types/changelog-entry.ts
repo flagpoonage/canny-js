@@ -64,3 +64,20 @@ export interface ChangelogEntry {
    */
   url: string;
 }
+
+const _CHANGELOG_ENTRY_TYPES = ["fixed", "new", "improved"] as const;
+export const CHANGELOG_ENTRY_TYPES =
+  _CHANGELOG_ENTRY_TYPES as readonly string[];
+
+export type ChangelogEntryType = (typeof _CHANGELOG_ENTRY_TYPES)[number];
+
+const _CHANGELOG_SORT_TYPE = [
+  "created",
+  "lastSaved",
+  "nonPublishedFirst",
+  "publishedAt",
+] as const;
+
+export const CHANGELOG_SORT_TYPE = _CHANGELOG_SORT_TYPE as readonly string[];
+
+export type ChangelogSortType = (typeof _CHANGELOG_SORT_TYPE)[number];

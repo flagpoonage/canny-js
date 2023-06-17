@@ -1,5 +1,12 @@
 import { cannyRequest } from "../utils.js";
-import type { ChangelogEntry } from "../types/changelog-entry.js";
+import {
+  CHANGELOG_ENTRY_TYPES,
+  ChangelogSortType,
+  type ChangelogEntry,
+  type ChangelogEntryType,
+  CHANGELOG_SORT_TYPE,
+} from "../types/changelog-entry.js";
+import { ValidatorFunction, DW as d } from "dealwith";
 
 /**
  * Options for the {@link createChangelogEntry} API
@@ -16,7 +23,7 @@ export type CreateChangelogEntryOptions = {
   /**
    * The type of your changelog entry. Can be one of "fixed", "new", and "improved".
    */
-  type?: "fixed" | "new" | "improved";
+  type?: ChangelogEntryType;
   /**
    * Whether you want to publish the changelog entry immediately or not. Default is false.
    */
@@ -53,6 +60,24 @@ export function createChangelogEntry(options: CreateChangelogEntryOptions) {
   return cannyRequest<CreateChangelogResponse>("/entries/create", options);
 }
 
+const createChangelogEntryValidator = d
+  .object()
+  .schema<CreateChangelogEntryOptions>({
+    postIDs: d.oneof(d.undefined(), d.array().items(d.string())),
+    title: d.string(),
+    details: d.string(),
+    type: d.oneof(
+      d.undefined(),
+      d.string().allowed(...CHANGELOG_ENTRY_TYPES)
+    ) as ValidatorFunction<ChangelogEntryType | undefined>,
+    published: d.oneof(d.boolean(), d.undefined()),
+    scheduledFor: d.oneof(d.string(), d.undefined()),
+    labelIDs: d.oneof(d.undefined(), d.array().items(d.string())),
+  });
+
+createChangelogEntry.validator = (v: unknown) =>
+  createChangelogEntryValidator("", v);
+
 /**
  * Options for the {@link listChangelogEntries} API
  */
@@ -72,11 +97,11 @@ export type ListChangelogEntriesOptions = {
   /**
    * The order in which the entries should be fetched. Defaults to `nonPublishedFirst` if not specified.
    */
-  sort?: "created" | "lastSaved" | "nonPublishedFirst" | "publishedAt";
+  sort?: ChangelogSortType;
   /**
    * The type of entries to fetch.
    */
-  type?: "fixed" | "new" | "improved";
+  type?: ChangelogEntryType;
 };
 
 /**
@@ -105,3 +130,22 @@ export function listChangelogEntries(
 ) {
   return cannyRequest<ListChangelogEntriesResponse>("/entries/list", options);
 }
+
+const listChangelogEntriesValidator = d
+  .object()
+  .schema<ListChangelogEntriesOptions>({
+    limit: d.oneof(d.number(), d.undefined()),
+    skip: d.oneof(d.number(), d.undefined()),
+    type: d.oneof(
+      d.undefined(),
+      d.string().allowed(...CHANGELOG_ENTRY_TYPES)
+    ) as ValidatorFunction<ChangelogEntryType | undefined>,
+    sort: d.oneof(
+      d.undefined(),
+      d.string().allowed(...CHANGELOG_SORT_TYPE)
+    ) as ValidatorFunction<ChangelogSortType | undefined>,
+    labelIDs: d.oneof(d.undefined(), d.array().items(d.string())),
+  });
+
+listChangelogEntries.validator = (v: unknown) =>
+  listChangelogEntriesValidator("", v);

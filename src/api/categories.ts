@@ -1,5 +1,6 @@
 import { cannyRequest } from "../utils.js";
 import type { Category } from "../types/category.js";
+import { DW as d } from "dealwith";
 
 /**
  * Retrieves the details of an existing category, specified by its id.
@@ -11,6 +12,12 @@ import type { Category } from "../types/category.js";
 export function retrieveCategory(id: string) {
   return cannyRequest<Category>("/categories/retrieve", { id });
 }
+
+const retrieveCategoryValidator = d.object().schema({
+  id: d.string(),
+});
+
+retrieveCategory.validator = (v: unknown) => retrieveCategoryValidator("", v);
 
 /**
  * Options for the {@link listCategories} API.
@@ -57,6 +64,14 @@ export function listCategories(options: ListCategoriesOptions = {}) {
   });
 }
 
+const listCategoriesValidator = d.object().schema<ListCategoriesOptions>({
+  boardID: d.oneof(d.string(), d.undefined()),
+  limit: d.oneof(d.number(), d.undefined()),
+  skip: d.oneof(d.number(), d.undefined()),
+});
+
+listCategories.validator = (v: unknown) => listCategoriesValidator("", v);
+
 /**
  * Options for the {@link createCategory} API.
  */
@@ -97,6 +112,15 @@ export function createCategory(options: CreateCategoryOptions) {
   return cannyRequest<CreateCategoryResponse>("/categories/create", options);
 }
 
+const createCategoryValidator = d.object().schema<CreateCategoryOptions>({
+  boardID: d.string(),
+  name: d.string(),
+  parentID: d.oneof(d.string(), d.undefined()),
+  subscribeAdmins: d.boolean(),
+});
+
+createCategory.validator = (v: unknown) => createCategoryValidator("", v);
+
 /**
  * Deletes a category If the category does not have sub categories.
  *
@@ -107,3 +131,9 @@ export function createCategory(options: CreateCategoryOptions) {
 export function deleteCategory(id: string) {
   return cannyRequest<void>("/categories/delete", { id });
 }
+
+const deleteCategoryValidator = d.object().schema({
+  id: d.string(),
+});
+
+deleteCategory.validator = (v: unknown) => deleteCategoryValidator("", v);

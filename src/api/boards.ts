@@ -1,5 +1,6 @@
 import { cannyRequest } from "../utils.js";
 import type { Board } from "../types/board.js";
+import { DW as d } from "dealwith";
 
 /**
  * Retrieves the details of an existing board, specified by its ID.
@@ -11,6 +12,12 @@ import type { Board } from "../types/board.js";
 export function retrieveBoard(id: string) {
   return cannyRequest<Board>("/boards/retrieve", { id });
 }
+
+const retrieveBoardValidator = d.object().schema({
+  id: d.string(),
+});
+
+retrieveBoard.validator = (v: unknown) => retrieveBoardValidator("", v);
 
 /**
  * Response for the {@link listAllBoards} API.
@@ -31,3 +38,5 @@ export interface ListAllBoardsResponse {
 export function listAllBoards() {
   return cannyRequest<ListAllBoardsResponse>("/boards/list");
 }
+
+listAllBoards.validator = () => d.undefined()("", undefined);
