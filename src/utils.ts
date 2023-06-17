@@ -1,5 +1,4 @@
 import { getCannyApiKey, getCannyApiOrigin } from "./env.js";
-import { got, HTTPError, Response } from "got-cjs";
 
 type AsyncSuccess<T> = {
   success: true;
@@ -25,10 +24,10 @@ export class FailedFetchError extends Error {
   }
 }
 
-export class BadResponseError extends Error {
-  private _response: Response;
-  constructor(response: Response) {
-    super(`[${response.statusCode}] - ${response.statusMessage}`);
+export class BadResponseError<T> extends Error {
+  private _response: T;
+  constructor(code: number, message: string | undefined, response: T) {
+    super(`[${code}] - ${message}`);
     this._response = response;
   }
 
@@ -52,48 +51,14 @@ export function safeJsonResponseBody(response: string): AsyncResult<unknown> {
   }
 }
 
-export async function post<T>(
-  url: string,
-  requestData: unknown
-): Promise<AsyncResult<T>> {
-  try {
-    const response = await got.post(url, {
-      json: requestData,
-    });
+export type FetchFunction = <T>(p: string, d: Record<string, unknown>) => Promise<AsyncResult<T>>;
 
-    if (!response.ok) {
-      return {
-        success: false,
-        error: new BadResponseError(response),
-      };
-    }
+const fetch = {
+  fn: null as null | FetchFunction
+}; 
 
-    const body = safeJsonResponseBody(response.body);
-
-    if (!body.success) {
-      return {
-        success: false,
-        error: body.error,
-      };
-    }
-
-    return {
-      success: true,
-      value: body.value as T,
-    };
-  } catch (ex) {
-    if (ex instanceof HTTPError) {
-      return {
-        success: false,
-        error: ex,
-      };
-    }
-
-    return {
-      success: false,
-      error: new FailedFetchError(ex),
-    };
-  }
+export function setFetchFunction (fn: FetchFunction) {
+  fetch.fn = fn;
 }
 
 export function cannyRequest<T>(
@@ -101,5 +66,5 @@ export function cannyRequest<T>(
   data: Record<string, unknown> = {}
 ) {
   const request_data = { ...data, apiKey: getCannyApiKey() };
-  return post<T>(`${getCannyApiOrigin()}${path}`, request_data);
+  return fetch.fn?.<T>(`${getCannyApiOrigin()}${path}`, request_data);
 }
