@@ -120,3 +120,16 @@ export interface Post {
    */
   url: string;
 }
+
+const _POSTS_SORT_TYPE = [
+  "newest",
+  "oldest",
+  "relevance",
+  "score",
+  "statusChanged",
+  "trending",
+] as const;
+
+export const POSTS_SORT_TYPE = _POSTS_SORT_TYPE as readonly string[];
+
+export type PostsSortType = (typeof _POSTS_SORT_TYPE)[number];

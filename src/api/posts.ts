@@ -1,5 +1,5 @@
 import { cannyRequest } from "../utils.js";
-import type { Post } from "../types/post.js";
+import type { Post, PostsSortType } from "../types/post.js";
 
 /**
  * Options for the {@link retrievePost} API
@@ -68,13 +68,7 @@ export type ListPostsOptions = {
   /**
    * The order in which the posts should be fetched. Options include: "newest", "oldest", "relevance", "score", "statusChanged", "trending". Defaults to "newest" if not specified. The "relevance" sort can only be specified if a search value has been specified.
    */
-  sort?:
-    | "newest"
-    | "oldest"
-    | "relevance"
-    | "score"
-    | "statusChanged"
-    | "trneding";
+  sort?: PostsSortType;
   /**
    * A comma separated list of statuses. Only posts with these statuses will be fetched. Defaults to "open,under review,planned,in progress" if not specified.
    */
