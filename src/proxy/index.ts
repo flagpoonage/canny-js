@@ -37,9 +37,12 @@ export function createCannyProxyRequestHandler(options: CannyProxyOptions) {
 
     try {
       const origin = options.cannyApiOrigin ?? getCannyApiOrigin();
+      const target_url = path.join(origin, api_specifier);
+
+      options.logRequests && console.log("Posting to", target_url);
 
       await pipeline(
-        got.stream.post(path.join(origin, api_specifier), {
+        got.stream.post(target_url, {
           throwHttpErrors: false,
           headers: {
             "Content-Type": "application/json",
@@ -61,6 +64,7 @@ export function createCannyProxyRequestHandler(options: CannyProxyOptions) {
 interface CannyProxyOptions {
   apiPath?: string;
   cannyApiOrigin?: string;
+  logRequests?: boolean;
   port?: number;
   host?: string;
 }

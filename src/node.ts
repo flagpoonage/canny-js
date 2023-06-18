@@ -57,4 +57,5 @@ async function post<T>(
 
 setFetchFunction(post);
 
-export * from './api/index.js';
+export * from "./api/index.js";
+export * from "./types/index.js";

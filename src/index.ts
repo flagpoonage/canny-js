@@ -6,6 +6,7 @@ import {
 } from "./utils.js";
 
 export * from "./api/index.js";
+export * from "./types/index.js";
 
 async function post<T>(
   url: string,
